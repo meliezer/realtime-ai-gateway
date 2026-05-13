@@ -1,8 +1,11 @@
 import { buildApp } from './app.js';
 import { env } from './config/env.js';
-import { redis } from './lib/redis.js';
+import { createRedisConnection } from './lib/redis.js';
+import { aiWorker } from './queue/ai-worker.js';
 
 const app = buildApp();
+
+const redis = createRedisConnection();
 
 const start = async () => {
   try {
@@ -15,9 +18,22 @@ const start = async () => {
       host: '0.0.0.0',
     });
 
-    app.log.info('Server started');
+    app.log.info(
+      {
+        workerName: aiWorker.name,
+      },
+      'AI worker initialized',
+    );
+
+    app.log.info(
+      {
+        port: env.PORT,
+      },
+      'Server started',
+    );
   } catch (err) {
     app.log.error(err);
+
     process.exit(1);
   }
 };
@@ -28,7 +44,7 @@ const shutdown = async () => {
   app.log.info('Shutting down application...');
 
   await redis.quit();
-
+  await aiWorker.close();
   await app.close();
 
   process.exit(0);

@@ -1,13 +1,14 @@
 import Fastify from 'fastify';
-
-import { redis } from './lib/redis.js';
-
+import { createRedisConnection } from './lib/redis.js';
 import { fakeAiStream } from './ai/fake-ai-provider.js';
+import { aiQueue } from './queue/ai-queue.js';
 
 export function buildApp() {
   const app = Fastify({
     logger: true,
   });
+
+  const redis = createRedisConnection();
 
   app.get('/health/live', async () => {
     return {
@@ -39,6 +40,18 @@ export function buildApp() {
       typeof request.query.prompt === 'string'
         ? request.query.prompt
         : 'default prompt';
+
+    const job = await aiQueue.add('stream-request', {
+      prompt,
+    });
+
+    app.log.info(
+      {
+        jobId: job.id,
+        prompt,
+      },
+      'AI streaming job enqueued',
+    );
 
     reply.raw.setHeader('Content-Type', 'text/event-stream');
     reply.raw.setHeader('Cache-Control', 'no-cache');

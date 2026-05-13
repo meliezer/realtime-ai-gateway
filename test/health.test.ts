@@ -1,9 +1,11 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { buildApp } from '../src/app.js';
-import { redis } from '../src/lib/redis.js';
+import { createRedisConnection } from '../src/lib/redis.js';
 
 const app = buildApp();
+
+const redis = createRedisConnection();
 
 beforeAll(async () => {
   await redis.connect();

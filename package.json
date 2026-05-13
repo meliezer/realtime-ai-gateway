@@ -20,6 +20,7 @@
   "type": "module",
   "dependencies": {
     "@fastify/sensible": "^6.0.4",
+    "bullmq": "^5.76.8",
     "dotenv": "^17.4.2",
     "fastify": "^5.8.5",
     "ioredis": "^5.10.1",

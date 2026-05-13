@@ -1,9 +1,11 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { buildApp } from '../src/app.js';
-import { redis } from '../src/lib/redis.js';
+import { createRedisConnection } from '../src/lib/redis.js';
 
 const app = buildApp();
+
+const redis = createRedisConnection();
 
 beforeAll(async () => {
   await redis.connect();
@@ -26,9 +28,7 @@ describe('GET /ai/stream', () => {
 
     expect(response.statusCode).toBe(200);
 
-    expect(response.headers['content-type']).toContain(
-      'text/event-stream',
-    );
+    expect(response.headers['content-type']).toContain('text/event-stream');
 
     expect(response.body).toContain('data: Processing');
 
