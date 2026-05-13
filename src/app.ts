@@ -2,6 +2,8 @@ import Fastify from 'fastify';
 
 import { redis } from './lib/redis.js';
 
+import { fakeAiStream } from './ai/fake-ai-provider.js';
+
 export function buildApp() {
   const app = Fastify({
     logger: true,
@@ -26,6 +28,38 @@ export function buildApp() {
       return reply.status(503).send({
         status: 'not_ready',
       });
+    }
+  });
+
+  app.get('/ai/stream', async (request, reply) => {
+    const prompt =
+      typeof request.query === 'object' &&
+      request.query !== null &&
+      'prompt' in request.query &&
+      typeof request.query.prompt === 'string'
+        ? request.query.prompt
+        : 'default prompt';
+
+    reply.raw.setHeader('Content-Type', 'text/event-stream');
+    reply.raw.setHeader('Cache-Control', 'no-cache');
+    reply.raw.setHeader('Connection', 'keep-alive');
+
+    reply.raw.flushHeaders();
+
+    try {
+      for await (const token of fakeAiStream(prompt)) {
+        reply.raw.write(`data: ${token}\n\n`);
+      }
+
+      reply.raw.write('event: done\n');
+      reply.raw.write('data: stream completed\n\n');
+    } catch (error) {
+      app.log.error(error, 'Streaming failed');
+
+      reply.raw.write('event: error\n');
+      reply.raw.write('data: streaming failed\n\n');
+    } finally {
+      reply.raw.end();
     }
   });
 
