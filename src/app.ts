@@ -1,10 +1,8 @@
-import crypto from 'node:crypto';
-
 import Fastify from 'fastify';
 
+import type { ChatCompletionRequest } from './ai/openai-types.js';
+import { streamAiResponse } from './ai/stream-ai-response.js';
 import { createRedisConnection } from './lib/redis.js';
-import { aiQueue } from './queue/ai-queue.js';
-import { getStreamChannel } from './queue/channel.js';
 
 export function buildApp() {
   const app = Fastify({
@@ -44,76 +42,21 @@ export function buildApp() {
         ? request.query.prompt
         : 'default prompt';
 
-    const subscriber = createRedisConnection();
-
-    await subscriber.connect();
-
-    const streamId = crypto.randomUUID();
-
-    const channel = getStreamChannel(streamId);
-
-    reply.raw.setHeader('Content-Type', 'text/event-stream');
-    reply.raw.setHeader('Cache-Control', 'no-cache');
-    reply.raw.setHeader('Connection', 'keep-alive');
-
-    reply.raw.flushHeaders();
-
-    let closed = false;
-
-    subscriber.on('message', (receivedChannel, message) => {
-      if (receivedChannel !== channel) {
-        return;
-      }
-
-      const payload = JSON.parse(message) as
-        | {
-            type: 'token';
-            token: string;
-          }
-        | {
-            type: 'done';
-          };
-
-      if (payload.type === 'token') {
-        reply.raw.write(`data: ${payload.token}\n\n`);
-      }
-
-      if (payload.type === 'done') {
-        reply.raw.write('event: done\n');
-        reply.raw.write('data: stream completed\n\n');
-
-        if (!closed) {
-          closed = true;
-
-          void subscriber.quit();
-        }
-
-        reply.raw.end();
-      }
-    });
-
-    await subscriber.subscribe(channel);
-
-    const job = await aiQueue.add('stream-request', {
+    await streamAiResponse(request, reply, {
       prompt,
-      streamId,
     });
+  });
 
-    app.log.info(
-      {
-        jobId: job.id,
-        streamId,
-        prompt,
-      },
-      'AI streaming job enqueued',
-    );
+  app.post('/v1/chat/completions', async (request, reply) => {
+    const body = request.body as ChatCompletionRequest;
 
-    request.raw.on('close', async () => {
-      if (!closed) {
-        closed = true;
+    const lastMessage = body.messages[body.messages.length - 1];
 
-        await subscriber.quit();
-      }
+    const prompt = lastMessage?.content ?? 'empty prompt';
+
+    await streamAiResponse(request, reply, {
+      prompt,
+      openAiFormat: true,
     });
   });
 
