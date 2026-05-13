@@ -3,7 +3,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { buildApp } from '../src/app.js';
 import { createRedisConnection } from '../src/lib/redis.js';
 
-const app = buildApp();
+const app = await buildApp();
 
 const redis = createRedisConnection();
 

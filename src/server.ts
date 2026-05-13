@@ -1,22 +1,17 @@
+import { aiWorker } from './queue/ai-worker.js';
+import { createRedisConnection } from './lib/redis.js';
 import { buildApp } from './app.js';
 import { env } from './config/env.js';
-import { createRedisConnection } from './lib/redis.js';
-import { aiWorker } from './queue/ai-worker.js';
-
-const app = buildApp();
 
 const redis = createRedisConnection();
 
 const start = async () => {
+  const app = await buildApp();
+
   try {
     await redis.connect();
 
     app.log.info('Redis connected');
-
-    await app.listen({
-      port: env.PORT,
-      host: '0.0.0.0',
-    });
 
     app.log.info(
       {
@@ -25,12 +20,32 @@ const start = async () => {
       'AI worker initialized',
     );
 
+    await app.listen({
+      port: env.PORT,
+      host: '0.0.0.0',
+    });
+
     app.log.info(
       {
         port: env.PORT,
       },
       'Server started',
     );
+
+    const shutdown = async () => {
+      app.log.info('Shutting down application...');
+
+      await aiWorker.close();
+
+      await redis.quit();
+
+      await app.close();
+
+      process.exit(0);
+    };
+
+    process.on('SIGINT', shutdown);
+    process.on('SIGTERM', shutdown);
   } catch (err) {
     app.log.error(err);
 
@@ -38,17 +53,4 @@ const start = async () => {
   }
 };
 
-start();
-
-const shutdown = async () => {
-  app.log.info('Shutting down application...');
-
-  await redis.quit();
-  await aiWorker.close();
-  await app.close();
-
-  process.exit(0);
-};
-
-process.on('SIGINT', shutdown);
-process.on('SIGTERM', shutdown);
+await start();

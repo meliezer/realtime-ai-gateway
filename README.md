@@ -1,6 +1,7 @@
 # Realtime AI Gateway
 
 Prototype realtime AI gateway built with modern backend infrastructure patterns:
+
 - OpenAI-compatible streaming APIs
 - Redis pub/sub event streaming
 - BullMQ async processing
@@ -36,7 +37,7 @@ SSE Streaming Response
 - Queue-backed async AI processing
 - Redis pub/sub streaming bridge
 - Concurrent worker processing
-- Structured JSON logging
+- Structured JSON logging and stream correlation
 - Health and readiness checks
 - Typed TypeScript architecture
 - Docker Compose local infrastructure
@@ -203,7 +204,6 @@ npm run test
 - OpenTelemetry tracing
 - Prometheus metrics
 - Kubernetes deployment manifests
-- Backpressure handling
 - Stream persistence
 - Retry and dead-letter queues
 - Horizontal worker scaling
@@ -213,6 +213,7 @@ npm run test
 # Why This Project Exists
 
 This repository is intended as a backend/platform engineering showcase focused on:
+
 - async systems
 - realtime streaming
 - infrastructure-oriented backend design

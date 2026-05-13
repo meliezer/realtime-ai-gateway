@@ -1,12 +1,18 @@
+import rateLimit from '@fastify/rate-limit';
 import Fastify from 'fastify';
 
 import type { ChatCompletionRequest } from './ai/openai-types.js';
 import { streamAiResponse } from './ai/stream-ai-response.js';
 import { createRedisConnection } from './lib/redis.js';
 
-export function buildApp() {
+export async function buildApp() {
   const app = Fastify({
     logger: true,
+  });
+
+  await app.register(rateLimit, {
+    max: 10,
+    timeWindow: '1 minute',
   });
 
   const redis = createRedisConnection();
@@ -47,18 +53,29 @@ export function buildApp() {
     });
   });
 
-  app.post('/v1/chat/completions', async (request, reply) => {
-    const body = request.body as ChatCompletionRequest;
+  app.post(
+    '/v1/chat/completions',
+    {
+      config: {
+        rateLimit: {
+          max: 5,
+          timeWindow: '1 minute',
+        },
+      },
+    },
+    async (request, reply) => {
+      const body = request.body as ChatCompletionRequest;
 
-    const lastMessage = body.messages[body.messages.length - 1];
+      const lastMessage = body.messages[body.messages.length - 1];
 
-    const prompt = lastMessage?.content ?? 'empty prompt';
+      const prompt = lastMessage?.content ?? 'empty prompt';
 
-    await streamAiResponse(request, reply, {
-      prompt,
-      openAiFormat: true,
-    });
-  });
+      await streamAiResponse(request, reply, {
+        prompt,
+        openAiFormat: true,
+      });
+    },
+  );
 
   return app;
 }
