@@ -12,40 +12,71 @@ await publisher.connect();
 export const aiWorker = new Worker(
   'ai-stream',
   async (job) => {
-    logger.info(
-      {
-        id: job.id,
-        data: job.data,
-      },
-      'Processing AI job',
-    );
+    try {
+      logger.info(
+        {
+          id: job.id,
+          streamId: job.data.streamId,
+          data: job.data,
+        },
+        'Processing AI job',
+      );
 
-    const prompt = job.data.prompt as string;
+      const prompt = job.data.prompt as string;
 
-    const channel = getStreamChannel(job.data.streamId as string);
+      const channel = getStreamChannel(job.data.streamId as string);
 
-    for await (const token of fakeAiStream(prompt)) {
+      const startedAt = Date.now();
+
+      let tokenCount = 0;
+
+      for await (const token of fakeAiStream(prompt)) {
+        tokenCount += 1;
+
+        await publisher.publish(
+          channel,
+          JSON.stringify({
+            type: 'token',
+            token,
+          }),
+        );
+      }
+
       await publisher.publish(
         channel,
         JSON.stringify({
-          type: 'token',
-          token,
+          type: 'done',
         }),
       );
+
+      logger.info(
+        {
+          id: job.id,
+          streamId: job.data.streamId,
+          tokenCount,
+          durationMs: Date.now() - startedAt,
+        },
+        'AI stream completed',
+      );
+
+      return {
+        completed: true,
+      };
+    } catch (error) {
+      logger.error(
+        {
+          error,
+          id: job.id,
+          streamId: job.data.streamId,
+        },
+        'AI stream failed',
+      );
+
+      throw error;
     }
-
-    await publisher.publish(
-      channel,
-      JSON.stringify({
-        type: 'done',
-      }),
-    );
-
-    return {
-      completed: true,
-    };
   },
   {
     connection: createRedisConnection(),
+    concurrency: 5,
   },
 );
