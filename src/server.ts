@@ -1,4 +1,4 @@
-import { buildApp } from "./app.js";
+import { buildApp } from './app.js';
 
 const app = buildApp();
 
@@ -6,10 +6,10 @@ const start = async () => {
   try {
     await app.listen({
       port: 3000,
-      host: "0.0.0.0",
+      host: '0.0.0.0',
     });
 
-    app.log.info("Server started");
+    app.log.info('Server started');
   } catch (err) {
     app.log.error(err);
     process.exit(1);
