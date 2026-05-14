@@ -1,34 +1,17 @@
 # Realtime AI Gateway
+
 ![CI](https://github.com/meliezer/realtime-ai-gateway/actions/workflows/ci.yml/badge.svg)
 
-Prototype realtime AI gateway built with modern backend infrastructure patterns:
+The project was partially inspired by enterprise environments where internal AI platforms provide centralized access to multiple LLM providers through controlled backend services and operational gateways. Prototype realtime AI gateway built with modern backend infrastructure patterns:
 
 - OpenAI-compatible streaming APIs
 - Redis pub/sub event streaming
 - BullMQ async processing
 - Server-Sent Events (SSE)
-- Structured observability
+- Structured logging and stream correlation
 - Health and readiness endpoints
 
-This project focuses on backend architecture, async workflows, and operational thinking rather than UI development.
-
----
-
-# Architecture
-
-```text
-Client
-  ↓
-Fastify API
-  ↓
-BullMQ Queue
-  ↓
-AI Worker
-  ↓
-Redis Pub/Sub
-  ↓
-SSE Streaming Response
-```
+This project focuses on backend architecture, async workflows, streaming semantics, and operational concerns rather than UI development.
 
 ---
 
@@ -46,6 +29,52 @@ SSE Streaming Response
 - Strict TypeScript and ESM-based architecture
 - Docker Compose local infrastructure
 - Graceful shutdown and application lifecycle handling
+
+---
+
+# Developer Tooling
+
+- ESLint
+- Prettier
+- SonarLint-ready setup
+- EditorConfig
+- GitHub Actions CI
+- CodeQL security scanning
+
+---
+
+# Architecture Overview
+
+```text
+Client
+  │
+  ▼
+Fastify API
+  │
+  ▼
+BullMQ Queue
+  │
+  ▼
+AI Worker
+  │
+  ▼
+Redis Pub/Sub
+  │
+  ▼
+SSE Streaming Response
+```
+
+---
+
+# Potential Use Cases
+
+- internal enterprise AI gateway
+- provider abstraction layer for multiple LLM vendors
+- streaming proxy for frontend AI applications
+- async orchestration for long-running AI tasks
+- centralized rate limiting and operational controls
+- observability and auditing layer for AI integrations
+- foundation for multi-tenant AI platform architectures
 
 ---
 
@@ -213,7 +242,7 @@ npm run test
 
 ---
 
-## Future CI Enhancements
+# Future CI Enhancements
 
 - AI-assisted PR review workflows
 - automated architecture feedback
@@ -231,4 +260,4 @@ This repository is intended as a backend/platform engineering showcase focused o
 - operational awareness
 - AI gateway architecture patterns
 
-Rather than building a simple CRUD application, the goal is to demonstrate production-minded engineering decisions and modern backend architecture concepts.
+The goal of this project is to explore realtime AI gateway patterns, async processing workflows, streaming semantics, and operational concerns commonly found in modern backend and platform engineering environments.
