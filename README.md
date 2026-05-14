@@ -35,14 +35,17 @@ SSE Streaming Response
 # Features
 
 - OpenAI-compatible streaming endpoint
-- Queue-backed async AI processing
 - Redis pub/sub streaming bridge
+- Queue-backed async AI processing
 - Concurrent worker processing
-- Structured JSON logging and stream correlation
+- Rate limiting
+- Structured logging with stream correlation and timing metrics
 - Health and readiness checks
-- Typed TypeScript architecture
+- GitHub Actions CI pipeline
+- CodeQL security scanning
+- Strict TypeScript and ESM-based architecture
 - Docker Compose local infrastructure
-- Production-minded lifecycle handling
+- Graceful shutdown and application lifecycle handling
 
 ---
 
@@ -201,13 +204,20 @@ npm run test
 - Provider abstraction layer
 - OpenAI / Anthropic adapters
 - JWT authentication
-- Rate limiting
 - OpenTelemetry tracing
 - Prometheus metrics
 - Kubernetes deployment manifests
 - Stream persistence
 - Retry and dead-letter queues
 - Horizontal worker scaling
+
+---
+
+## Future CI Enhancements
+
+- AI-assisted PR review workflows
+- automated architecture feedback
+- CI-integrated code quality suggestions
 
 ---
 
