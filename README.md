@@ -1,4 +1,5 @@
 # Realtime AI Gateway
+![CI](https://github.com/meliezer/realtime-ai-gateway/actions/workflows/ci.yml/badge.svg)
 
 Prototype realtime AI gateway built with modern backend infrastructure patterns:
 
