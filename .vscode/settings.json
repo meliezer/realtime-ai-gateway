@@ -1,8 +1,13 @@
 {
   "editor.formatOnSave": true,
+
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
-  "eslint.validate": ["typescript"],
-  "typescript.tsdk": "node_modules/typescript/lib"
+
+  "eslint.validate": [
+    "typescript"
+  ],
+
+  "js/ts.tsdk.path": "node_modules/typescript/lib"
 }

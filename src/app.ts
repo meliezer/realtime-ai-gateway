@@ -66,7 +66,12 @@ export async function buildApp() {
     async (request, reply) => {
       const body = request.body as ChatCompletionRequest;
 
-      const lastMessage = body.messages[body.messages.length - 1];
+      const lastMessage = body.messages.at(-1);
+      if (!lastMessage) {
+        return reply.status(400).send({
+          error: 'At least one message is required',
+        });
+      }
 
       const prompt = lastMessage?.content ?? 'empty prompt';
 
