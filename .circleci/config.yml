@@ -57,6 +57,6 @@ jobs:
           command: npm run test
 
 workflows:
-  secure-delivery:
+  continuous-verification:
     jobs:
       - build-and-test
