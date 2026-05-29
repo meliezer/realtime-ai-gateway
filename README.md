@@ -1,6 +1,6 @@
 # Realtime AI Gateway
 
-![GitHub Actions CI](https://github.com/meliezer/realtime-ai-gateway/actions/workflows/ci.yml/badge.svg) [![CircleCI](https://dl.circleci.com/status-badge/img/gh/meliezer/realtime-ai-gateway/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/meliezer/realtime-ai-gateway/tree/main)
+![GitHub Actions CI](https://github.com/meliezer/realtime-ai-gateway/actions/workflows/ci.yml/badge.svg) [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/5cnR1iuTsTDsknttAcbo9R/MytocRy9Me7aR3VWgAJvnw/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/circleci/5cnR1iuTsTDsknttAcbo9R/MytocRy9Me7aR3VWgAJvnw/tree/main)
 
 The project was partially inspired by enterprise environments where internal AI platforms provide centralized access to multiple LLM providers through controlled backend services and operational gateways. Prototype realtime AI gateway built with modern backend infrastructure patterns:
 
@@ -286,5 +286,6 @@ This repository is intended as a backend/platform engineering showcase focused o
 - infrastructure-oriented backend design
 - operational awareness
 - AI gateway architecture patterns
+- CI/CD portability and continuous verification workflows
 
-The goal of this project is to explore realtime AI gateway patterns, async processing workflows, streaming semantics, and operational concerns commonly found in modern backend and platform engineering environments.
+The goal of this project is to explore realtime AI gateway patterns, async processing workflows, streaming semantics, CI/CD portability, and operational concerns commonly found in modern backend and platform engineering environments.
