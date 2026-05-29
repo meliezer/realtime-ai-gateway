@@ -1,6 +1,6 @@
 # Realtime AI Gateway
 
-![CI](https://github.com/meliezer/realtime-ai-gateway/actions/workflows/ci.yml/badge.svg)
+![GitHub Actions CI](https://github.com/meliezer/realtime-ai-gateway/actions/workflows/ci.yml/badge.svg) [![CircleCI](https://dl.circleci.com/status-badge/img/gh/meliezer/realtime-ai-gateway/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/meliezer/realtime-ai-gateway/tree/main)
 
 The project was partially inspired by enterprise environments where internal AI platforms provide centralized access to multiple LLM providers through controlled backend services and operational gateways. Prototype realtime AI gateway built with modern backend infrastructure patterns:
 
@@ -40,6 +40,29 @@ This project focuses on backend architecture, async workflows, streaming semanti
 - EditorConfig
 - GitHub Actions CI
 - CodeQL security scanning
+- CircleCI continuous verification workflow
+
+---
+
+# Continuous Verification & CI Portability
+
+This repository explores portable CI/CD and continuous verification workflows across multiple delivery platforms.
+
+The project currently includes:
+
+- GitHub Actions CI workflows
+- a CircleCI continuous verification workflow
+- containerized PostgreSQL and Redis integration environments
+- dependency caching and reusable workflow components
+- staged lint, build, and integration test validation
+
+The goal is not only to validate application correctness, but also to explore modern backend delivery architecture patterns focused on:
+
+- fast feedback loops
+- reusable pipeline design
+- platform-agnostic verification workflows
+- operational resilience
+- AI-assisted engineering experimentation
 
 ---
 
@@ -242,11 +265,15 @@ npm run test
 
 ---
 
-# Future CI Enhancements
+# Delivery Pipeline Evolution
 
-- AI-assisted PR review workflows
-- automated architecture feedback
-- CI-integrated code quality suggestions
+- test report publishing and coverage visualization
+- container image build and registry workflows
+- security scanning and dependency analysis
+- test splitting and parallelized CI execution
+- reusable pipeline abstractions across CI providers
+- AI-assisted CI analysis and architecture feedback
+- workflow observability and execution insights
 
 ---
 
